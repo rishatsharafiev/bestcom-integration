@@ -10,13 +10,14 @@ DROP TABLE IF EXISTS itpartner_product;
 DROP TABLE IF EXISTS itpartner_image;
 SET FOREIGN_KEY_CHECKS=1;
 
-/* drop indexes */
-DROP INDEX IF EXISTS itpartner_product_category_id_idx;
-DROP INDEX IF EXISTS itpartner_image_product_id_idx;
+/* drop indexes
+DROP INDEX itpartner_product_category_id_idx ON itpartner_product;
+DROP INDEX itpartner_image_product_id_idx ON itpartner_image;
+*/
 
 /* create itpartner_category table */
 CREATE TABLE itpartner_category (
-    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id INTEGER NOT NULL PRIMARY KEY,
     name varchar(255) NOT NULL,
     parent_id INTEGER NULL
 );
@@ -33,7 +34,7 @@ CREATE TABLE itpartner_product (
     has_image BOOLEAN DEFAULT FALSE,
     weight DECIMAL(20,12) NOT NULL,
     price DECIMAL(20,12) NOT NULL,
-    qty varchar(255) NOT NULL,
+    quantity varchar(255) NOT NULL,
     category_id INTEGER NULL,
     CONSTRAINT fk_categorys
         FOREIGN KEY (category_id)

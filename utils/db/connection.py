@@ -20,7 +20,7 @@ def get_connection():
             password=MYSQL_PASSWORD,
             db=MYSQL_DB,
             charset='utf8mb4',
-            cursorclass=cursors.DictCursor
+            cursorclass=cursors.Cursor
         )
     except Exception as exp:
         raise exp
