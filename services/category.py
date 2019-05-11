@@ -29,6 +29,6 @@ class CategoryService:
 
     @classmethod
     def update_or_create(cls):
-        categories = CategoryApi.categories
+        categories = CategoryApi.get_categories()
 
         cls.parse_category(categories)
