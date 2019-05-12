@@ -6,7 +6,7 @@ from entities.category import CategoryEntity
 class CategoryService:
 
     @classmethod
-    def parse_category(cls, childrens, parent_id=None):
+    def parse(cls, childrens, parent_id=None):
         for category in childrens:
             childrens = category.get('childrens', [])
             category_id = category.get('id')
@@ -18,7 +18,7 @@ class CategoryService:
                     _parent_id=parent_id,
                 )
                 category_row_id = CategoryRepository.update_or_create(category_entity=category_entity)
-                cls.parse_category(childrens, category_id)
+                cls.parse(childrens, category_id)
             else:
                 category_entity = CategoryEntity(
                     _id=category_id,
@@ -29,6 +29,11 @@ class CategoryService:
 
     @classmethod
     def update_or_create(cls):
-        categories = CategoryApi.get_categories()
+        # mark all previous data as deleted
+        CategoryRepository.mark_all_as_deleted()
 
-        cls.parse_category(categories)
+        # get data
+        categories = CategoryApi.get_all()
+
+        # parse and save
+        cls.parse(categories)

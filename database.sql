@@ -19,27 +19,27 @@ DROP INDEX itpartner_image_product_id_idx ON itpartner_image;
 CREATE TABLE itpartner_category (
     id INTEGER NOT NULL PRIMARY KEY,
     name varchar(255) NOT NULL,
-    parent_id INTEGER NULL
+    parent_id INTEGER NULL,
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 
 /* create itpartner_product table */
 CREATE TABLE itpartner_product (
-    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name varchar(255) NOT NULL,
-    part varchar(255) NOT NULL,
-    sku INTEGER NOT NULL,
-    vendor varchar(255) NOT NULL,
-    volume DECIMAL(20,12) NOT NULL,
+    sku INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NULL,
+    part varchar(255) NULL,
+    vendor varchar(255) NULL,
+    description TEXT NULL,
+    volume DECIMAL(20,12) NULL,
     has_image BOOLEAN DEFAULT FALSE,
-    weight DECIMAL(20,12) NOT NULL,
-    price DECIMAL(20,12) NOT NULL,
-    quantity varchar(255) NOT NULL,
+    weight DECIMAL(20,12) NULL,
+    price DECIMAL(20,12) NULL,
+    quantity varchar(255) NULL,
+    min_quantity INTEGER NULL,
     category_id INTEGER NULL,
-    CONSTRAINT fk_categorys
-        FOREIGN KEY (category_id)
-        REFERENCES itpartner_category(id)
-        ON DELETE CASCADE
+    is_deleted BOOLEAN DEFAULT FALSE,
+    CONSTRAINT unique_idx_sku UNIQUE (sku)
 );
 
 /* create index on foreign key itpartner_product(category_id) */
@@ -49,12 +49,8 @@ CREATE INDEX itpartner_product_category_id_idx ON itpartner_product(category_id)
 CREATE TABLE itpartner_image (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     url varchar(255) NOT NULL,
-    product_id INTEGER NULL,
-    CONSTRAINT fk_products
-        FOREIGN KEY (product_id)
-        REFERENCES itpartner_product(id)
-        ON DELETE CASCADE
+    product_sku INTEGER NULL
 );
 
-/* create index on foreign key itpartner_image(product_id) */
-CREATE INDEX itpartner_image_product_id_idx ON itpartner_image(product_id);
+/* create index on foreign key itpartner_image(product_sku) */
+CREATE INDEX itpartner_image_product_sku_idx ON itpartner_image(product_sku);

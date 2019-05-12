@@ -1,1 +1,1 @@
-from .category import CategoryEntity
+"""Entities"""
