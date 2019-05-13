@@ -8,7 +8,7 @@ from entities.product import ProductEntity
 from entities.image import ImageEntity
 
 from utils.db.connection import get_connection
-from settings import IT_PARTNET_LOGIN, IT_PARTNET_PASSWORD
+from settings import IT_PARTNET_LOGIN, IT_PARTNET_PASSWORD, IT_PARTNET_SITE_URL
 
 class ProductService:
 
@@ -139,7 +139,7 @@ class ProductService:
 
                 if image_url:
                     image_entity=ImageEntity(
-                        _url=image_url,
+                        _url=f'{IT_PARTNET_SITE_URL}{image_url}',
                         _sku=product_entity.sku
                     )
 
