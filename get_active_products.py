@@ -1,6 +1,13 @@
+from utils.logging.loggers import create_rotating_log
+from utils.logging.decorators import exception
+
+log_file = "get_active_products.log"
+logger = create_rotating_log(log_file)
+
 from services.product import ProductService
 
 
+@exception(logger)
 def main():
     ProductService.get_active_products()
 

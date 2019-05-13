@@ -34,11 +34,11 @@ class CatalogApi:
                 if session_id:                    
                     return session_id
                 else:
-                    raise Exception(f'Exception session_id not found in response')
+                    raise Exception(f'session_id not found in response')
             else:
-                raise Exception(f'Exception auth is not success with message: {response.get("message")}')
+                raise Exception(f'auth is not success with message: "{response.get("message")}"')
         else:
-            raise Exception(f'Exception with HTTP status code: {response.status_code}')
+            raise Exception(f'HTTP status code: {response.status_code}')
 
     @staticmethod
     def get_active_products(session_id: str):
@@ -63,6 +63,6 @@ class CatalogApi:
             if response.get('success'):
                 return pydash.get(response, 'data.products', [])
             else:
-                raise Exception(f'Exception auth is not success with message: {response.get("message")}')
+                raise Exception(f'auth is not success with message: {response.get("message")}')
         else:
-            raise Exception(f'Exception with HTTP status code: {response.status_code}')
+            raise Exception(f'HTTP status code: {response.status_code}')

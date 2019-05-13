@@ -105,7 +105,7 @@ class ProductService:
     @classmethod
     def get_active_products(cls):
         # get session_id
-        session_id = CatalogApi.auth(login=IT_PARTNET_LOGIN, password=IT_PARTNET_PASSWORD)
+        session_id = CatalogApi.auth(login=IT_PARTNET_LOGIN+'12', password=IT_PARTNET_PASSWORD)
 
         # get products
         products = CatalogApi.get_active_products(session_id=session_id)

@@ -1,6 +1,13 @@
+from utils.logging.loggers import create_rotating_log
+from utils.logging.decorators import exception
+
+log_file = "category.log"
+logger = create_rotating_log(log_file)
+
 from services.category import CategoryService
 
 
+@exception(logger)
 def main():
     CategoryService.update_or_create()
 

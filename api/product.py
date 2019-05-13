@@ -12,7 +12,7 @@ class ProductApi:
         if response.status_code == 200:
             return json.loads(response.text)
         else:
-            raise Exception(f'Exception with HTTP status code: {response.status_code}')
+            raise Exception(f'HTTP status code: {response.status_code}')
 
     @staticmethod
     def get_test():
