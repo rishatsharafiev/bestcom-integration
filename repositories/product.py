@@ -25,6 +25,24 @@ class ProductRepository:
 
         return False
 
+    @staticmethod
+    def mark_all_as_inactive():
+        sql_string = "UPDATE itpartner_product SET is_active=FALSE;"
+
+        connection = None
+
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(sql_string)
+                connection.commit()
+                return cursor.lastrowid
+        finally:
+            if connection:
+                connection.close()
+
+        return False
 
     @staticmethod
     def update_or_create(cursor, product_entity: ProductEntity):
@@ -62,6 +80,18 @@ class ProductRepository:
             product_entity.weight,
             product_entity.min_quantity,
             product_entity.category_id,
+        )
+
+        cursor.execute(sql_string, prepared_statements)
+
+    @staticmethod
+    def update_partially(cursor, product_entity: ProductEntity):
+        sql_string = "UPDATE itpartner_product SET price = %s, quantity = %s, is_active=True WHERE sku=%s;"
+
+        prepared_statements = (
+            product_entity.price,
+            product_entity.quantity,
+            product_entity.sku,
         )
 
         cursor.execute(sql_string, prepared_statements)

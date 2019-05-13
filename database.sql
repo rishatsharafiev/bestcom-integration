@@ -34,11 +34,12 @@ CREATE TABLE itpartner_product (
     volume DECIMAL(20,12) NULL,
     has_image BOOLEAN DEFAULT FALSE,
     weight DECIMAL(20,12) NULL,
-    price DECIMAL(20,12) NULL,
+    price DECIMAL(20,2) NULL,
     quantity varchar(255) NULL,
     min_quantity INTEGER NULL,
     category_id INTEGER NULL,
     is_deleted BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT FALSE,
     CONSTRAINT unique_idx_sku UNIQUE (sku)
 );
 

@@ -15,3 +15,6 @@ DEBUG_LEVEL = env('DEBUG_LEVEL', cast=str, default='DEBUG')
 
 IT_PARTNET_CATEGORY_URL = env('IT_PARTNET_CATEGORY_URL', cast=str, default='https://b2b.i-t-p.pro/download/catalog/json/catalog_tree.json') 
 IT_PARTNET_PRODUCT_URL = env('IT_PARTNET_PRODUCT_URL', cast=str, default='https://b2b.i-t-p.pro/download/catalog/json/products.json') 
+IT_PARTNET_API_URL = env('IT_PARTNET_API_URL', cast=str, default='https://b2b.i-t-p.pro/api')
+IT_PARTNET_LOGIN = env('IT_PARTNET_LOGIN', cast=str)
+IT_PARTNET_PASSWORD = env('IT_PARTNET_PASSWORD', cast=str)

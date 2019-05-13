@@ -1,9 +1,12 @@
+import pydash
+
 from api.product import ProductApi
+from api.catalog import CatalogApi
 from repositories.product import ProductRepository
 from entities.product import ProductEntity
 
 from utils.db.connection import get_connection
-
+from settings import IT_PARTNET_LOGIN, IT_PARTNET_PASSWORD
 
 class ProductService:
 
@@ -43,7 +46,7 @@ class ProductService:
                         product_row_id = ProductRepository.update_or_create(cursor=cursor, product_entity=product_entity)
 
                     counter += 1
-                    if counter == 20000:
+                    if counter == 15000:
                         connection.commit()
                         counter = 0
                 
@@ -54,7 +57,38 @@ class ProductService:
             if connection:
                 connection.close()
 
-       
+    @classmethod
+    def save_active(cls, products):
+        connection = get_connection()
+
+        try:
+            with connection.cursor() as cursor:
+                counter = 0
+
+                for product in products:
+                    product_sku = product.get('sku')
+                    product_price = product.get('price')
+                    product_quantity = product.get('qty')
+
+                    if product_sku:
+                        product_entity = ProductEntity(
+                            _sku=product_sku,
+                            _price=product_price,
+                            _quantity=product_quantity,
+                        )
+                        product_row_id = ProductRepository.update_partially(cursor=cursor, product_entity=product_entity)
+
+                    counter += 1
+                    if counter == 15000:
+                        connection.commit()
+                        counter = 0
+                
+                if counter != 0:
+                    connection.commit()
+                
+        finally:
+            if connection:
+                connection.close()
 
     @classmethod
     def update_or_create(cls):
@@ -66,3 +100,18 @@ class ProductService:
 
         # parse and save
         cls.save(products)
+
+
+    @classmethod
+    def get_active_products(cls):
+        # get session_id
+        session_id = CatalogApi.auth(login=IT_PARTNET_LOGIN, password=IT_PARTNET_PASSWORD)
+
+        # get products
+        products = CatalogApi.get_active_products(session_id=session_id)
+
+        # set is_active False 
+        ProductRepository.mark_all_as_inactive()
+
+        # save active
+        cls.save_active(products)
