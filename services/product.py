@@ -3,7 +3,9 @@ import pydash
 from api.product import ProductApi
 from api.catalog import CatalogApi
 from repositories.product import ProductRepository
+from repositories.image import ImageRepository
 from entities.product import ProductEntity
+from entities.image import ImageEntity
 
 from utils.db.connection import get_connection
 from settings import IT_PARTNET_LOGIN, IT_PARTNET_PASSWORD
@@ -105,7 +107,7 @@ class ProductService:
     @classmethod
     def get_active_products(cls):
         # get session_id
-        session_id = CatalogApi.auth(login=IT_PARTNET_LOGIN+'12', password=IT_PARTNET_PASSWORD)
+        session_id = CatalogApi.auth(login=IT_PARTNET_LOGIN, password=IT_PARTNET_PASSWORD)
 
         # get products
         products = CatalogApi.get_active_products(session_id=session_id)
@@ -115,3 +117,33 @@ class ProductService:
 
         # save active
         cls.save_active(products)
+    
+    @classmethod
+    def get_products_clients_images(cls):
+        # get session_id
+        session_id = CatalogApi.auth(login=IT_PARTNET_LOGIN, password=IT_PARTNET_PASSWORD)
+
+        # get products
+        product_entities = ProductRepository.get_products_without_images()
+
+        for product_entity in product_entities:
+            # get image
+            try:
+                images = CatalogApi.get_products_clients_images(session_id=session_id, sku=product_entity.sku)
+            except Exception as exp:
+                print(exp)
+                images = []
+
+            for image in images:
+                image_url = image.get('url')
+
+                if image_url:
+                    image_entity=ImageEntity(
+                        _url=image_url,
+                        _sku=product_entity.sku
+                    )
+
+                    # save image
+                    ImageRepository.create(
+                        image_entity=image_entity
+                    )

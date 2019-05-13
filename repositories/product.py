@@ -95,3 +95,29 @@ class ProductRepository:
         )
 
         cursor.execute(sql_string, prepared_statements)
+
+    @staticmethod
+    def get_products_without_images(limit=1000):
+        sql_string = """SELECT `itpartner_product`.`sku` FROM `itpartner_product` 
+            LEFT JOIN `itpartner_image` ON `itpartner_product`.`sku` = `itpartner_image`.`product_sku` 
+            WHERE `itpartner_product`.`has_image`=True AND `itpartner_image`.`url` IS NULL LIMIT %s;"""
+        
+        prepared_statements = (
+            limit,
+        )
+
+        connection = None
+
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(sql_string, prepared_statements)
+                products = cursor.fetchall()
+
+                return [ProductEntity(_sku=product[0]) for product in products]
+        finally:
+            if connection:
+                connection.close()
+
+        return False
