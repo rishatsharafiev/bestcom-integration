@@ -13,6 +13,6 @@ def main():
 
 if __name__ == '__main__':
     """Timeit 199.82189220799773"""
-    """crontab every 1 hour"""
+    """Crontab: 30 * * * * /path/to/get_active_products.py"""
     import timeit
     print(timeit.Timer(main).timeit(number=1))
