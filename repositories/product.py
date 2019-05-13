@@ -1,3 +1,5 @@
+import pydash
+
 from utils.db import get_connection
 
 from entities.product import ProductEntity
@@ -116,6 +118,74 @@ class ProductRepository:
                 products = cursor.fetchall()
 
                 return [ProductEntity(_sku=product[0]) for product in products]
+        finally:
+            if connection:
+                connection.close()
+
+        return False
+
+    @staticmethod
+    def get_active_products_count():
+        sql_string = """SELECT COUNT(*) FROM `itpartner_product`
+            WHERE `itpartner_product`.`is_deleted`=FALSE 
+                AND `itpartner_product`.`is_active`=TRUE;
+        """
+        
+        connection = None
+
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(sql_string)
+                result = cursor.fetchone()
+
+                return pydash.get(result, '0', 0)
+        finally:
+            if connection:
+                connection.close()
+
+        return False
+
+    @staticmethod
+    def get_products(limit=1000, offset=0):
+        sql_string = """SELECT ip.part, ip.sku, ip.name, ip.price, ip.quantity, ii.url
+            FROM itpartner_product ip
+            LEFT JOIN (
+                SELECT url, product_sku
+                FROM itpartner_image
+                WHERE id IN (
+                SELECT min(id) 
+                FROM itpartner_image
+                GROUP BY product_sku
+                )
+            ) ii ON ip.sku =  ii.product_sku
+            WHERE ip.is_deleted=FALSE AND ip.is_active=TRUE
+            LIMIT %s
+            OFFSET %s;"""
+        
+        prepared_statements = (
+            limit,
+            offset,
+        )
+
+        connection = None
+
+        try:
+            connection = get_connection()
+
+            with connection.cursor() as cursor:
+                cursor.execute(sql_string, prepared_statements)
+                products = cursor.fetchall()
+
+                return [ProductEntity(
+                    _part=product[0], 
+                    _sku=product[1],
+                    _name=product[2],
+                    _price=product[3] if product[3] else '',
+                    _quantity=product[4] if product[4] else '',
+                    _url=product[5] if product[5] else '',
+                    ) for product in products]
         finally:
             if connection:
                 connection.close()

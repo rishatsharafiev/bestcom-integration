@@ -17,6 +17,7 @@ class ProductEntity:
         'min_quantity',
         'category_id',
         'description',
+        'url',
     )
 
     def __init__(
@@ -33,6 +34,7 @@ class ProductEntity:
         _min_quantity: int = None,
         _category_id: int = None,
         _description: str = None,
+        _url: str = None,
     ):
         """
         Конструктор
@@ -49,6 +51,7 @@ class ProductEntity:
             _min_quantity: Минимальное кол-во
             _category_id: ID категории
             _description: Описание
+            _url: Картинка
         """
         self.name = _name
         self.part = _part
@@ -62,3 +65,4 @@ class ProductEntity:
         self.min_quantity = _min_quantity
         self.category_id = _category_id
         self.description = _description
+        self.url = _url

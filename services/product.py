@@ -4,11 +4,14 @@ from api.product import ProductApi
 from api.catalog import CatalogApi
 from repositories.product import ProductRepository
 from repositories.image import ImageRepository
+from repositories.price import PriceRepository
 from entities.product import ProductEntity
 from entities.image import ImageEntity
+from entities.price import PriceEntity
 
 from utils.db.connection import get_connection
 from settings import IT_PARTNET_LOGIN, IT_PARTNET_PASSWORD, IT_PARTNET_SITE_URL
+
 
 class ProductService:
 
